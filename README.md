@@ -8,11 +8,3 @@
 export TELEGRAM_TOKEN=paste_token_from_step_1
 ```
 3. Install go programming language https://golang.org/doc/install
-
-## Development
-
-### Local dev
-
-```go
-go cmd/main.go
-```

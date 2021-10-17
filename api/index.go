@@ -7,12 +7,11 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/h4ckm03d/demobot"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	b := demobot.NewWebhookBot(os.Getenv("TELEGRAM_TOKEN"))
+	b := NewWebhookBot(os.Getenv("TELEGRAM_TOKEN"))
 	b.Setup()
 
 	var u tb.Update

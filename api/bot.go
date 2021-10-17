@@ -1,4 +1,4 @@
-package demobot
+package handler
 
 import (
 	"fmt"
@@ -80,7 +80,7 @@ func (wb *WebhookBot) handlerStart(m *tb.Message) {
 	
 	---
 	`
-	wb.b.Send(m.Sender, msg, &tb.SendOptions{
+	wb.Bot.Send(m.Sender, msg, &tb.SendOptions{
 		ParseMode:             tb.ModeMarkdown,
 		DisableWebPagePreview: true,
 	})
@@ -92,7 +92,7 @@ func (wb *WebhookBot) handlerSyarat(m *tb.Message) {
 		response = v
 	}
 
-	wb.b.Send(m.Sender, response, &tb.SendOptions{
+	wb.Bot.Send(m.Sender, response, &tb.SendOptions{
 		ParseMode:             tb.ModeMarkdown,
 		DisableWebPagePreview: true,
 	})
