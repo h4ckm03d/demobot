@@ -48,14 +48,67 @@ var syarat = map[string]string{"ktp": `*Syarat Pembuatan KTP*:
 - Jika pengurangan terjadi karena ada anggota keluarga yang pindah, maka surat keterangan kematian diganti dengan surat keterangan pindah (bagi anggota keluarga yang pindah).
 `}
 
-type WebhookBot struct {
-	Token string
-	Bot   *tb.Bot
-}
+// type WebhookBot struct {
+// 	Token string
+// 	Bot   *tb.Bot
+// }
 
-func (wb *WebhookBot) Setup() {
+// func (wb *WebhookBot) Setup() {
+// 	b, err := tb.NewBot(tb.Settings{
+// 		Token:       wb.Token,
+// 		Synchronous: true,
+// 	})
+
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+
+// 	if err != nil {
+// 		log.Fatal(err)
+// 		return
+// 	}
+// 	// set instance bot
+// 	wb.Bot = b
+
+// 	wb.Bot.Handle("/start", wb.handlerStart)
+// 	wb.Bot.Handle("/syarat", wb.handlerSyarat)
+// 	wb.Bot.Handle(tb.OnText, func(m *tb.Message) {
+// 		_, _ = b.Send(m.Sender, "Maaf bos, ga ngerti!")
+// 	})
+// }
+
+// func (wb *WebhookBot) handlerStart(m *tb.Message) {
+// 	msg := `Selamat datang demo dispenduk bot
+// 	List bot command:
+// 	/syarat <tipe>: Syarat pembuatan dokumen
+
+// 	---
+// 	`
+// 	wb.Bot.Send(m.Sender, msg, &tb.SendOptions{
+// 		ParseMode:             tb.ModeMarkdown,
+// 		DisableWebPagePreview: true,
+// 	})
+// }
+
+// func (wb *WebhookBot) handlerSyarat(m *tb.Message) {
+// 	response := fmt.Sprintf("Syarat pembuatan dokumen %s tidak ditemukan", m.Payload)
+// 	if v, ok := syarat[strings.ToLower(m.Payload)]; ok {
+// 		response = v
+// 	}
+
+// 	wb.Bot.Send(m.Sender, response, &tb.SendOptions{
+// 		ParseMode:             tb.ModeMarkdown,
+// 		DisableWebPagePreview: true,
+// 	})
+// }
+
+// func NewWebhookBot(token string) *WebhookBot {
+// 	return &WebhookBot{Token: token}
+// }
+
+func Handler(w http.ResponseWriter, r *http.Request) {
 	b, err := tb.NewBot(tb.Settings{
-		Token:       wb.Token,
+		Token:       os.Getenv("TELEGRAM_TOKEN"),
 		Synchronous: true,
 	})
 
@@ -67,48 +120,33 @@ func (wb *WebhookBot) Setup() {
 		log.Fatal(err)
 		return
 	}
-	// set instance bot
-	wb.Bot = b
 
-	wb.Bot.Handle("/start", wb.handlerStart)
-	wb.Bot.Handle("/syarat", wb.handlerSyarat)
-	wb.Bot.Handle(tb.OnText, func(m *tb.Message) {
+	b.Handle("/start", func(m *tb.Message) {
+		msg := `Selamat datang demo dispenduk bot
+		List bot command:
+		/syarat <tipe>: Syarat pembuatan dokumen
+		
+		---
+		`
+		b.Send(m.Sender, msg, &tb.SendOptions{
+			ParseMode:             tb.ModeMarkdown,
+			DisableWebPagePreview: true,
+		})
+	})
+	b.Handle("/syarat", func(m *tb.Message) {
+		response := fmt.Sprintf("Syarat pembuatan dokumen %s tidak ditemukan", m.Payload)
+		if v, ok := syarat[strings.ToLower(m.Payload)]; ok {
+			response = v
+		}
+
+		b.Send(m.Sender, response, &tb.SendOptions{
+			ParseMode:             tb.ModeMarkdown,
+			DisableWebPagePreview: true,
+		})
+	})
+	b.Handle(tb.OnText, func(m *tb.Message) {
 		_, _ = b.Send(m.Sender, "Maaf bos, ga ngerti!")
 	})
-}
-
-func (wb *WebhookBot) handlerStart(m *tb.Message) {
-	msg := `Selamat datang demo dispenduk bot
-	List bot command:
-	/syarat <tipe>: Syarat pembuatan dokumen
-	
-	---
-	`
-	wb.Bot.Send(m.Sender, msg, &tb.SendOptions{
-		ParseMode:             tb.ModeMarkdown,
-		DisableWebPagePreview: true,
-	})
-}
-
-func (wb *WebhookBot) handlerSyarat(m *tb.Message) {
-	response := fmt.Sprintf("Syarat pembuatan dokumen %s tidak ditemukan", m.Payload)
-	if v, ok := syarat[strings.ToLower(m.Payload)]; ok {
-		response = v
-	}
-
-	wb.Bot.Send(m.Sender, response, &tb.SendOptions{
-		ParseMode:             tb.ModeMarkdown,
-		DisableWebPagePreview: true,
-	})
-}
-
-func NewWebhookBot(token string) *WebhookBot {
-	return &WebhookBot{Token: token}
-}
-
-func Handler(w http.ResponseWriter, r *http.Request) {
-	b := NewWebhookBot(os.Getenv("TELEGRAM_TOKEN"))
-	b.Setup()
 
 	var u tb.Update
 
@@ -118,6 +156,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = json.Unmarshal(body, &u); err == nil {
-		b.Bot.ProcessUpdate(u)
+		b.ProcessUpdate(u)
 	}
 }
