@@ -1,0 +1,8 @@
+
+{
+    "version": 2,
+    "env": {
+        "GO_BUILD_FLAGS": "-ldflags '-s -w'"
+    },
+    "public": true
+  }
