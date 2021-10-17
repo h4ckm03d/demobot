@@ -66,10 +66,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	b.Handle("/start", func(m *tb.Message) {
 		msg := `Selamat datang demo dispenduk bot
 		List bot command:
-		/syarat: Syarat pembuatan dokumen. contoh "/syarat kk"
-		
-		---
-		`
+		` + "/syarat: Syarat pembuatan dokumen. contoh `/syarat kk`"
+
 		b.Send(m.Sender, msg, &tb.SendOptions{
 			ParseMode:             tb.ModeMarkdown,
 			DisableWebPagePreview: true,
