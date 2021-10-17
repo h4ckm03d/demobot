@@ -48,64 +48,6 @@ var syarat = map[string]string{"ktp": `*Syarat Pembuatan KTP*:
 - Jika pengurangan terjadi karena ada anggota keluarga yang pindah, maka surat keterangan kematian diganti dengan surat keterangan pindah (bagi anggota keluarga yang pindah).
 `}
 
-// type WebhookBot struct {
-// 	Token string
-// 	Bot   *tb.Bot
-// }
-
-// func (wb *WebhookBot) Setup() {
-// 	b, err := tb.NewBot(tb.Settings{
-// 		Token:       wb.Token,
-// 		Synchronous: true,
-// 	})
-
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-
-// 	if err != nil {
-// 		log.Fatal(err)
-// 		return
-// 	}
-// 	// set instance bot
-// 	wb.Bot = b
-
-// 	wb.Bot.Handle("/start", wb.handlerStart)
-// 	wb.Bot.Handle("/syarat", wb.handlerSyarat)
-// 	wb.Bot.Handle(tb.OnText, func(m *tb.Message) {
-// 		_, _ = b.Send(m.Sender, "Maaf bos, ga ngerti!")
-// 	})
-// }
-
-// func (wb *WebhookBot) handlerStart(m *tb.Message) {
-// 	msg := `Selamat datang demo dispenduk bot
-// 	List bot command:
-// 	/syarat <tipe>: Syarat pembuatan dokumen
-
-// 	---
-// 	`
-// 	wb.Bot.Send(m.Sender, msg, &tb.SendOptions{
-// 		ParseMode:             tb.ModeMarkdown,
-// 		DisableWebPagePreview: true,
-// 	})
-// }
-
-// func (wb *WebhookBot) handlerSyarat(m *tb.Message) {
-// 	response := fmt.Sprintf("Syarat pembuatan dokumen %s tidak ditemukan", m.Payload)
-// 	if v, ok := syarat[strings.ToLower(m.Payload)]; ok {
-// 		response = v
-// 	}
-
-// 	wb.Bot.Send(m.Sender, response, &tb.SendOptions{
-// 		ParseMode:             tb.ModeMarkdown,
-// 		DisableWebPagePreview: true,
-// 	})
-// }
-
-// func NewWebhookBot(token string) *WebhookBot {
-// 	return &WebhookBot{Token: token}
-// }
-
 func Handler(w http.ResponseWriter, r *http.Request) {
 	b, err := tb.NewBot(tb.Settings{
 		Token:       os.Getenv("TELEGRAM_TOKEN"),
@@ -124,7 +66,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	b.Handle("/start", func(m *tb.Message) {
 		msg := `Selamat datang demo dispenduk bot
 		List bot command:
-		/syarat <tipe>: Syarat pembuatan dokumen
+		/syarat: Syarat pembuatan dokumen. contoh "/syarat kk"
 		
 		---
 		`
