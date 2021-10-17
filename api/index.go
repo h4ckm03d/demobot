@@ -74,7 +74,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		})
 	})
 	b.Handle("/syarat", func(m *tb.Message) {
-		response := fmt.Sprintf("Syarat pembuatan dokumen %s tidak ditemukan", m.Payload)
+		response := fmt.Sprintf("Syarat pembuatan dokumen %s tidak ditemukan, hanya ada `kk` dan `ktp`", m.Payload)
 		if v, ok := syarat[strings.ToLower(m.Payload)]; ok {
 			response = v
 		}
