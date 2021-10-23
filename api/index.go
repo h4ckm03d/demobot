@@ -73,6 +73,16 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			DisableWebPagePreview: true,
 		})
 	})
+	b.Handle("/help", func(m *tb.Message) {
+		msg := `Selamat datang demo dispenduk bot
+		List bot command:
+		` + "/syarat: Syarat pembuatan dokumen. contoh `/syarat kk`"
+
+		b.Send(m.Sender, msg, &tb.SendOptions{
+			ParseMode:             tb.ModeMarkdown,
+			DisableWebPagePreview: true,
+		})
+	})
 	b.Handle("/syarat", func(m *tb.Message) {
 		response := fmt.Sprintf("Syarat pembuatan dokumen %s tidak ditemukan, hanya ada `kk` dan `ktp`", m.Payload)
 		if v, ok := syarat[strings.ToLower(m.Payload)]; ok {
